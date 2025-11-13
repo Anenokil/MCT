@@ -1,0 +1,11 @@
+services:
+  web:
+    build: ./web_master
+    ports:
+      - "5000:5000"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
