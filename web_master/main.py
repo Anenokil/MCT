@@ -1,9 +1,18 @@
+import os
 from flask import Flask, request
+import psycopg
+
+DB_CONFIG = {
+    'host': os.getenv('DB_HOST', 'db'),
+    'dbname': os.getenv('DB_NAME', 'app'),
+    'user': os.getenv('DB_USER', 'user'),
+    'password': os.getenv('DB_PASSWORD', 'password'),
+    'port': os.getenv('DB_PORT', 5432)
+}
 
 app = Flask(__name__)
 
 ping_count = 0
-ip_addresses = set()
 
 
 @app.route('/')
@@ -18,12 +27,17 @@ def index():
 
 @app.route('/ping')
 def ping():
-    global ping_count, ip_addresses
-
+    global ping_count
     ping_count += 1
 
     client_ip = request.remote_addr
-    ip_addresses.add(client_ip)
+    with psycopg.connect(**DB_CONFIG) as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                'INSERT INTO ping_requests (ip_address) VALUES (%s)',
+                (client_ip,)
+            )
+        conn.commit()
 
     return 'pong'
 
