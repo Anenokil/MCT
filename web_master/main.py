@@ -6,6 +6,16 @@ ping_count = 0
 ip_addresses = set()
 
 
+@app.route('/')
+def index():
+    return {
+        'endpoints': {
+            '/ping': 'Return "pong" and logs your request',
+            '/visits': 'Return number of ping call count',
+        },
+    }
+
+
 @app.route('/ping')
 def ping():
     global ping_count, ip_addresses
