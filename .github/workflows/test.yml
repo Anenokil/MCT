@@ -2,9 +2,9 @@ name: Docker Compose Test
 
 on:
   push:
-    branches: [ test ]
+    branches: [ test3 ]
   pull_request:
-    branches: [ test ]
+    branches: [ test3 ]
 
 jobs:
   test-compose:
